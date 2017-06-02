@@ -9,28 +9,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.korzh.ht_01_06_2017.R;
-import com.korzh.ht_01_06_2017.callback.SecondFragmentClickCallBack;
+import com.korzh.ht_01_06_2017.callback.ThirdFragmentClickCallBack;
 
 
-public class SecondFragment extends Fragment {
+public class ThirdFragment extends Fragment {
 
-    private SecondFragmentClickCallBack mCallBack;
-
-    public static SecondFragment newInstance() {
-        return new SecondFragment();
+    public static ThirdFragment newInstance() {
+        return new ThirdFragment();
     }
 
-    public SecondFragment() {
-    }
+    private ThirdFragmentClickCallBack mCallBack;
 
+    public ThirdFragment() {
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallBack = (SecondFragmentClickCallBack) context;
+            mCallBack = (ThirdFragmentClickCallBack) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException("CallBack not SecondFragmentClickCallBack");
+            throw new ClassCastException("CallBack not ThirdFragmentClickCallBack");
         }
     }
 
@@ -43,11 +42,11 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_second, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_third, container, false);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallBack.clickFromSecondFragment();
+                mCallBack.clickFromThirdFragment();
             }
         });
         return rootView;

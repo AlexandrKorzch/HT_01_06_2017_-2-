@@ -1,75 +1,114 @@
 package com.korzh.ht_01_06_2017.activity;
 
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.korzh.ht_01_06_2017.R;
-import com.korzh.ht_01_06_2017.callback.FirstFragmentClickCallBack;
+import com.korzh.ht_01_06_2017.callback.MainInterface;
+import com.korzh.ht_01_06_2017.fragment.FifthFragment;
 import com.korzh.ht_01_06_2017.fragment.FirstFragment;
+import com.korzh.ht_01_06_2017.fragment.FourthFragment;
 import com.korzh.ht_01_06_2017.fragment.SecondFragment;
+import com.korzh.ht_01_06_2017.fragment.ThirdFragment;
 
-import static com.korzh.ht_01_06_2017.general.Const.COLOR_KEY;
+import static com.korzh.ht_01_06_2017.general.Const.FIFTH;
+import static com.korzh.ht_01_06_2017.general.Const.FIRST;
+import static com.korzh.ht_01_06_2017.general.Const.FOURTH;
+import static com.korzh.ht_01_06_2017.general.Const.FRAGMENT_POSITION;
+import static com.korzh.ht_01_06_2017.general.Const.SECOND;
+import static com.korzh.ht_01_06_2017.general.Const.THIRD;
 
-public class MainActivity extends AppCompatActivity implements FirstFragmentClickCallBack {
+public class MainActivity extends AppCompatActivity implements MainInterface {
 
-    private SecondFragment mSecondFragment;
-    private int mSecondFragmentColor;
+    private int mFragmentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState != null && savedInstanceState.containsKey(COLOR_KEY)) {
-            mSecondFragmentColor = savedInstanceState.getInt(COLOR_KEY);
+        if(savedInstanceState != null && savedInstanceState.containsKey(FRAGMENT_POSITION)){
+            mFragmentPosition = savedInstanceState.getInt(FRAGMENT_POSITION);
         }
-        if (isPortraitOrientation()) {
-            initPortraitScreen();
-        } else {
-            initLandscapScreen();
+        showFragment();
+    }
+
+    private void showFragment() {
+        Fragment fragment = getFragment(mFragmentPosition);
+        String fragmentTag = fragment.getClass().getSimpleName();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(fragmentManager.findFragmentByTag(fragmentTag) == null){
+            fragmentTransaction
+                    .replace(R.id.container, fragment, fragmentTag)
+                    .addToBackStack(fragmentTag);
+        }else{
+            fragmentTransaction
+                    .replace(R.id.container, fragment);
         }
-    }
-
-    private void initPortraitScreen() {
-        showFragment(FirstFragment.newInstance(), R.id.container_portrait);
-    }
-
-    private void initLandscapScreen() {
-        mSecondFragment = (SecondFragment) createSecondFragment(mSecondFragmentColor);
-        showFragment(FirstFragment.newInstance(), R.id.container_left);
-        showFragment(mSecondFragment, R.id.container_right);
-    }
-
-    private void showFragment(Fragment fragment, int containerId) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(containerId, fragment)
-                .commit();
+        fragmentTransaction.commit();
     }
 
     @Override
     public void clickFromFirstFragment() {
-        mSecondFragmentColor = Color.BLUE;
-        if (mSecondFragment == null) {
-            showFragment(createSecondFragment(mSecondFragmentColor), R.id.container_portrait);
-        } else {
-            mSecondFragment.changeBackgroundColor(mSecondFragmentColor);
+        mFragmentPosition = SECOND;
+        showFragment();
+    }
+
+    @Override
+    public void clickFromSecondFragment() {
+        mFragmentPosition = THIRD;
+        showFragment();
+    }
+
+    @Override
+    public void clickFromThirdFragment() {
+        mFragmentPosition = FOURTH;
+        showFragment();
+    }
+
+    @Override
+    public void clickFromFourthFragment() {
+        mFragmentPosition = FIFTH;
+        showFragment();
+    }
+
+    private Fragment getFragment(int position) {
+        Fragment fragment = null;
+        switch (position) {
+            case FIRST:
+                fragment = FirstFragment.newInstance();
+                break;
+            case SECOND:
+                fragment = SecondFragment.newInstance();
+                break;
+            case THIRD:
+                fragment = ThirdFragment.newInstance();
+                break;
+            case FOURTH:
+                fragment = FourthFragment.newInstance();
+                break;
+            case FIFTH:
+                fragment = FifthFragment.newInstance();
         }
+        return fragment;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(COLOR_KEY, mSecondFragmentColor);
+        outState.putInt(FRAGMENT_POSITION, mFragmentPosition);
     }
 
-    private Fragment createSecondFragment(int color) {
-        return SecondFragment.newInstance(color);
-    }
-
-    private boolean isPortraitOrientation() {
-        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+            super.onBackPressed();
+        }
     }
 }

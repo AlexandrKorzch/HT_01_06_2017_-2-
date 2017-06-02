@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ea80fc"
-    tools:context="com.korzh.ht_01_06_2017.fragment.SecondFragment">
+    android:background="#e57373"
+    tools:context="com.korzh.ht_01_06_2017.fragment.ThirdFragment">
 
 </FrameLayout>
